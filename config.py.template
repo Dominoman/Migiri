@@ -1,0 +1,3 @@
+DB_SOURCE = "sqlite:///database.db"
+DB_DESTINATION = "sqlite:///database_out.db"
+DB_DEBUG = False
