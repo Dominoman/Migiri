@@ -54,14 +54,14 @@ class Itinerary(Base):
     id: Mapped[str] = mapped_column(String(255), primary_key=True)
     flyFrom: Mapped[str] = mapped_column(String(3))
     flyTo: Mapped[str] = mapped_column(String(3))
-    cityFrom: Mapped[str] = mapped_column(String(30))
+    cityFrom: Mapped[str] = mapped_column(String(50))
     cityCodeFrom: Mapped[str] = mapped_column(String(3))
-    cityTo: Mapped[str] = mapped_column(String(30))
+    cityTo: Mapped[str] = mapped_column(String(50))
     cityCodeTo: Mapped[str] = mapped_column(String(3))
     countryFromCode: Mapped[str] = mapped_column(String(2))
-    countryFromName: Mapped[str] = mapped_column(String(30))
+    countryFromName: Mapped[str] = mapped_column(String(50))
     countryToCode: Mapped[str] = mapped_column(String(2))
-    countryToName: Mapped[str] = mapped_column(String(30))
+    countryToName: Mapped[str] = mapped_column(String(50))
     local_departure: Mapped[datetime]
     local_arrival: Mapped[datetime]
     nightsInDest: Mapped[int]
@@ -108,9 +108,9 @@ class Route(Base):
     combination_id: Mapped[str] = mapped_column(String(24))
     flyFrom: Mapped[str] = mapped_column(String(3))
     flyTo: Mapped[str] = mapped_column(String(3))
-    cityFrom: Mapped[str] = mapped_column(String(30))
+    cityFrom: Mapped[str] = mapped_column(String(50))
     cityCodeFrom: Mapped[str] = mapped_column(String(3))
-    cityTo: Mapped[str] = mapped_column(String(30))
+    cityTo: Mapped[str] = mapped_column(String(50))
     cityCodeTo: Mapped[str] = mapped_column(String(3))
     local_departure: Mapped[datetime]
     local_arrival: Mapped[datetime]
