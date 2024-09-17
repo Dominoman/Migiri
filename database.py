@@ -2,7 +2,7 @@ from datetime import datetime, date
 from typing import Optional, List, Dict, Tuple
 
 from sqlalchemy import create_engine, TIMESTAMP, ForeignKey, String, Table, Column, and_, select, delete, exists, not_, \
-    Index, Text
+    Index
 from sqlalchemy.orm import DeclarativeBase, Session, Mapped, mapped_column, relationship, Query, aliased
 
 
@@ -73,8 +73,8 @@ class Itinerary(Base):
     conversionEUR: Mapped[float]
     availabilitySeats: Mapped[Optional[int]]
     airlines: Mapped[str] = mapped_column(String(30))
-    booking_token: Mapped[str] = mapped_column(Text)
-    deep_link: Mapped[str] = mapped_column(Text)
+    booking_token: Mapped[str] = mapped_column(String(2048))
+    deep_link: Mapped[str] = mapped_column(String(2048))
     facilitated_booking_available: Mapped[bool]
     pnr_count: Mapped[int]
     has_airport_change: Mapped[bool]
