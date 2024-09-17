@@ -2,7 +2,7 @@ from datetime import datetime, date
 from typing import Optional, List, Dict, Tuple
 
 from sqlalchemy import create_engine, TIMESTAMP, ForeignKey, String, Table, Column, and_, select, delete, exists, not_, \
-    Index
+    Index, Text
 from sqlalchemy.orm import DeclarativeBase, Session, Mapped, mapped_column, relationship, Query, aliased
 
 
@@ -22,7 +22,7 @@ class Base(DeclarativeBase):
 class Search(Base):
     __tablename__ = "search"
 
-    search_id: Mapped[str] = mapped_column(primary_key=True)
+    search_id: Mapped[str] = mapped_column(String(36),primary_key=True)
     url: Mapped[str]
     timestamp: Mapped[datetime] = mapped_column(TIMESTAMP, default=datetime.now)
     range_start: Mapped[date]
@@ -40,9 +40,9 @@ class Search(Base):
 
 
 itinerary2route_table = Table("itinerary2route", Base.metadata,
-                              Column("search_id", ForeignKey("itinerary.search_id"), primary_key=True),
-                              Column("itinerary_id", ForeignKey("itinerary.id"), primary_key=True),
-                              Column("route_id", ForeignKey("route.id"), primary_key=True),
+                              Column("search_id", String(36), ForeignKey("itinerary.search_id"), primary_key=True),
+                              Column("itinerary_id",String(255), ForeignKey("itinerary.id"), primary_key=True),
+                              Column("route_id", String(26),ForeignKey("route.id"), primary_key=True),
                               Index('route_idx','route_id')
                               )
 
@@ -50,18 +50,18 @@ itinerary2route_table = Table("itinerary2route", Base.metadata,
 class Itinerary(Base):
     __tablename__ = "itinerary"
 
-    search_id: Mapped[str] = mapped_column(ForeignKey("search.search_id"), primary_key=True)
-    id: Mapped[str] = mapped_column(primary_key=True)
+    search_id: Mapped[str] = mapped_column(String(36),ForeignKey("search.search_id"), primary_key=True)
+    id: Mapped[str] = mapped_column(String(255),primary_key=True)
     flyFrom: Mapped[str] = mapped_column(String(3))
     flyTo: Mapped[str] = mapped_column(String(3))
-    cityFrom: Mapped[str]
+    cityFrom: Mapped[str]=mapped_column(String(30))
     cityCodeFrom: Mapped[str] = mapped_column(String(3))
-    cityTo: Mapped[str]
+    cityTo: Mapped[str]=mapped_column(String(30))
     cityCodeTo: Mapped[str] = mapped_column(String(3))
     countryFromCode: Mapped[str] = mapped_column(String(2))
-    countryFromName: Mapped[str]
+    countryFromName: Mapped[str]=mapped_column(String(30))
     countryToCode: Mapped[str] = mapped_column(String(2))
-    countryToName: Mapped[str]
+    countryToName: Mapped[str]=mapped_column(String(30))
     local_departure: Mapped[datetime]
     local_arrival: Mapped[datetime]
     nightsInDest: Mapped[int]
@@ -72,9 +72,9 @@ class Itinerary(Base):
     price: Mapped[float]
     conversionEUR: Mapped[float]
     availabilitySeats: Mapped[Optional[int]]
-    airlines: Mapped[str]
-    booking_token: Mapped[str]
-    deep_link: Mapped[str]
+    airlines: Mapped[str]=mapped_column(String(30))
+    booking_token: Mapped[str]=mapped_column(Text)
+    deep_link: Mapped[str]=mapped_column(Text)
     facilitated_booking_available: Mapped[bool]
     pnr_count: Mapped[int]
     has_airport_change: Mapped[bool]
@@ -104,29 +104,29 @@ class Itinerary(Base):
 class Route(Base):
     __tablename__ = "route"
 
-    id: Mapped[str] = mapped_column(primary_key=True)
-    combination_id: Mapped["str"]
+    id: Mapped[str] = mapped_column(String(26),primary_key=True)
+    combination_id: Mapped["str"]=mapped_column(String(24))
     flyFrom: Mapped[str] = mapped_column(String(3))
     flyTo: Mapped[str] = mapped_column(String(3))
-    cityFrom: Mapped[str]
+    cityFrom: Mapped[str]=mapped_column(String(30))
     cityCodeFrom: Mapped[str] = mapped_column(String(3))
-    cityTo: Mapped[str]
+    cityTo: Mapped[str]=mapped_column(String(30))
     cityCodeTo: Mapped[str] = mapped_column(String(3))
     local_departure: Mapped[datetime]
     local_arrival: Mapped[datetime]
-    airline: Mapped[str]
+    airline: Mapped[str]=mapped_column(String(2))
     flight_no: Mapped[int]
-    operating_carrier: Mapped[str]
-    operating_flight_no: Mapped[str]
-    fare_basis: Mapped[str]
-    fare_category: Mapped[str]
-    fare_classes: Mapped[str]
+    operating_carrier: Mapped[str]=mapped_column(String(2))
+    operating_flight_no: Mapped[str]=mapped_column(String(4))
+    fare_basis: Mapped[str]=mapped_column(String(10))
+    fare_category: Mapped[str]=mapped_column(String(1))
+    fare_classes: Mapped[str]=mapped_column(String(1))
     _return: Mapped[int]
     bags_recheck_required: Mapped[bool]
     vi_connection: Mapped[bool]
     guarantee: Mapped[bool]
-    equipment: Mapped[Optional[str]]
-    vehicle_type: Mapped[str]
+    equipment: Mapped[Optional[str]]=mapped_column(String(4))
+    vehicle_type: Mapped[str]=mapped_column(String(8))
 
     itineraries: Mapped[List[Itinerary]] = relationship(secondary=itinerary2route_table,
                                                         primaryjoin=lambda: itinerary2route_table.c.route_id == Route.id,
@@ -149,11 +149,11 @@ class Route(Base):
 class RouteHistory(Base):
     __tablename__ = "routehistory"
 
-    route_id: Mapped[str] = mapped_column(ForeignKey("route.id"), primary_key=True)
+    route_id: Mapped[str] = mapped_column(String(26),ForeignKey("route.id"), primary_key=True)
     timestamp: Mapped[datetime] = mapped_column(primary_key=True)
     fieldName: Mapped[str] = mapped_column(primary_key=True)
-    oldValue: Mapped[str]
-    newValue: Mapped[str]
+    oldValue: Mapped[str]=mapped_column(String(255))
+    newValue: Mapped[str]=mapped_column(String(255))
 
     route: Mapped[Route] = relationship(back_populates="histories")
 
