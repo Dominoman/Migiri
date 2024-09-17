@@ -151,7 +151,7 @@ class RouteHistory(Base):
 
     route_id: Mapped[str] = mapped_column(String(26), ForeignKey("route.id"), primary_key=True)
     timestamp: Mapped[datetime] = mapped_column(primary_key=True)
-    fieldName: Mapped[str] = mapped_column(primary_key=True)
+    fieldName: Mapped[str] = mapped_column(String(30),primary_key=True)
     oldValue: Mapped[str] = mapped_column(String(255))
     newValue: Mapped[str] = mapped_column(String(255))
 
