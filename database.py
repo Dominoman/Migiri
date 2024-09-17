@@ -42,11 +42,11 @@ class Search(Base):
 itinerary2route_table = Table("itinerary2route", Base.metadata,
                               Column("search_id", String(36), primary_key=True),
                               Column("itinerary_id", String(255), primary_key=True),
-                              Column("route_id", String(26), primary_key=True),
+                              Column("route_id", String(26), ForeignKey("route.id"), primary_key=True),
                               Index('route_idx', 'route_id'),
                               ForeignKeyConstraint(
-                                  ['search_id','itinerary_id','route_id'],
-                                  ['itinerary.search_id','itinerary.id','route.id']
+                                  ['search_id','itinerary_id'],
+                                  ['itinerary.search_id','itinerary.id']
                               )
                               )
 
