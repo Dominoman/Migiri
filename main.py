@@ -15,7 +15,6 @@ for table in ['search','itinerary','route','itinerary2route','routehistory']:
     table_object=Base.metadata.tables[table]
     count=c_source.execute(select(func.count()).select_from(table_object)).scalar()
     result=c_source.execute(select(table_object)).yield_per(YIELD_COUNT)
-    print(result.count())
 
     insert_stmt = insert(table_object)
     for row in tqdm(result,desc=table,total=count):
